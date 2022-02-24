@@ -271,17 +271,9 @@
         );
       };
 
-      const ConnectedTodos = () => {
-        return (
-          <Context.Consumer>
-            {(store) => {
-              const { todos } = store.getState();
-
-              return <Todos todos={todos} dispatch={store.dispatch} />;
-            }}
-          </Context.Consumer>
-        );
-      };
+      const ConnectedTodos = connect((state) => ({
+        todos: state.todos,
+      }))(Todos);
 
       const Goals = (props) => {
         const inputRef = React.useRef();
@@ -311,30 +303,16 @@
         );
       };
 
-      const ConnectedGoals = () => {
-        return (
-          <Context.Consumer>
-            {(store) => {
-              const { goals } = store.getState();
-
-              return <Goals goals={goals} dispatch={store.dispatch} />;
-            }}
-          </Context.Consumer>
-        );
-      };
+      const ConnectedGoals = connect((state) => ({
+        goals: state.goals,
+      }))(Goals);
 
       const App = (props) => {
-        const [value, setValue] = React.useState(0);
-
         React.useEffect(() => {
-          store.dispatch(handleInitialData());
-
-          store.subscribe(() => setValue((value) => value + 1));
+          props.dispatch(handleInitialData());
         }, []);
 
-        const { loading } = store.getState();
-
-        if (loading === true) {
+        if (props.loading === true) {
           return <h3>Loading</h3>;
         }
 
@@ -346,13 +324,9 @@
         );
       };
 
-      const ConnectedApp = () => {
-        return (
-          <Context.Consumer>
-            {(store) => <App store={store} />}
-          </Context.Consumer>
-        );
-      };
+      const ConnectedApp = connect((state) => ({
+        loading: state.loading,
+      }))(App);
 
       const Context = React.createContext();
 
