@@ -189,6 +189,11 @@
 
         const removeItem = (todo) => {
           props.store.dispatch(removeTodoAction(todo.id));
+
+          return API.deleteTodo(todo.id).catch(() => {
+            props.store.dispatch(addTodoAction(todo));
+            alert("An error occurred. Try again.");
+          });
         };
 
         const toggleItem = (id) => {
@@ -224,6 +229,11 @@
 
         const removeItem = (goal) => {
           props.store.dispatch(removeGoalAction(goal.id));
+
+          return API.deleteGoal(goal.id).catch(() => {
+            props.store.dispatch(addGoalAction(goal));
+            alert("An error occurred. Try again.");
+          });
         };
 
         return (
