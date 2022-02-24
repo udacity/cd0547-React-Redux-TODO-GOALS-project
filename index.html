@@ -282,10 +282,18 @@
       };
 
       const App = (props) => {
+        const [value, setValue] = React.useState(0);
+
+        React.useEffect(() => {
+          store.subscribe(() => setValue((value) => value + 1));
+        }, []);
+
+        const { todos, goals } = store.getState();
+
         return (
           <div>
-            <Todos store={props.store} />
-            <Goals store={props.store} />
+            <Todos todos={todos} store={props.store} />
+            <Goals goals={goals} store={props.store} />
           </div>
         );
       };
