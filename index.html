@@ -255,10 +255,27 @@
         );
       };
 
-      const Goals = () => {
+      const Goals = (props) => {
+        const inputRef = React.useRef();
+
+        const addItem = (e) => {
+          e.preventDefault();
+          const name = inputRef.current.value;
+          inputRef.current.value = "";
+
+          props.store.dispatch(
+            addGoalAction({
+              id: generateId(),
+              name,
+            })
+          );
+        };
+
         return (
           <div>
-            GOALS
+            <h1>Goals</h1>
+            <input type="text" placeholder="Add Goal" ref={inputRef} />
+            <button onClick={addItem}>Add Goal</button>
             <List />
           </div>
         );
@@ -268,7 +285,7 @@
         return (
           <div>
             <Todos store={props.store} />
-            <Goals />
+            <Goals store={props.store} />
           </div>
         );
       };
