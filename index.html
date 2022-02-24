@@ -82,6 +82,28 @@
         };
       }
 
+      function handleAddGoal(name, cb) {
+        return (dispatch) => {
+          return API.saveGoal(name)
+            .then((goal) => {
+              dispatch(addGoalAction(goal));
+              cb();
+            })
+            .catch(() => alert("There was an error. Try again."));
+        };
+      }
+
+      function handleDeleteGoal(goal) {
+        return (dispatch) => {
+          dispatch(removeGoalAction(goal.id));
+
+          return API.deleteGoal(goal.id).catch(() => {
+            dispatch(addGoalAction(goal));
+            alert("An error occurred. Try again.");
+          });
+        };
+      }
+
       function todos(state = [], action) {
         switch (action.type) {
           case ADD_TODO:
@@ -227,22 +249,16 @@
 
         const addItem = (e) => {
           e.preventDefault();
-
-          return API.saveGoal(inputRef.current.value)
-            .then((goal) => {
-              props.store.dispatch(addGoalAction(goal));
-              inputRef.current.value = "";
-            })
-            .catch(() => alert("There was an error. Try again."));
+          props.store.dispatch(
+            handleAddGoal(
+              inputRef.current.value,
+              () => (inputRef.current.value = "")
+            )
+          );
         };
 
         const removeItem = (goal) => {
-          props.store.dispatch(removeGoalAction(goal.id));
-
-          return API.deleteGoal(goal.id).catch(() => {
-            props.store.dispatch(addGoalAction(goal));
-            alert("An error occurred. Try again.");
-          });
+          props.store.dispatch(handleDeleteGoal(goal));
         };
 
         return (
